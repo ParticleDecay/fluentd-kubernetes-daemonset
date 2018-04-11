@@ -8,6 +8,7 @@ WORKDIR /home/fluent
 ENV PATH /home/fluent/.gem/ruby/2.3.0/bin:$PATH
 
 RUN set -ex \
+    && apk update && apk upgrade \
     && apk add --no-cache --virtual .build-deps \
         build-base \
         ruby-dev \
@@ -15,18 +16,21 @@ RUN set -ex \
     && echo 'gem: --no-document' >> /etc/gemrc \
     && gem install fluent-plugin-secure-forward \
     && gem install fluent-plugin-record-reformer \
+    && gem install fluent-plugin-detect-exceptions -v 0.0.9 \
     && gem install fluent-plugin-kafka \
     && gem install fluent-plugin-kubernetes_metadata_filter \
+    && gem install fluent-plugin-prometheus --version=0.4.0 \
     && apk del .build-deps \
     && gem sources --clear-all \
     && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
 
 # Copy configuration files
-COPY docker-image/v0.12/alpine-kafka/conf/fluent.conf /fluentd/etc/
-COPY docker-image/v0.12/alpine-kafka/conf/kubernetes.conf /fluentd/etc/
+COPY ./conf/fluent.conf /fluentd/etc/
+COPY ./conf/kubernetes.conf /fluentd/etc/
 
 # Copy plugins
-COPY docker-image/v0.12/alpine-kafka/plugins /fluentd/plugins/
+COPY plugins /fluentd/plugins/
+COPY entrypoint.sh /fluentd/entrypoint.sh
 
 # Environment variables
 ENV FLUENTD_OPT=""
