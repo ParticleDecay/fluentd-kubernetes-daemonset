@@ -32,5 +32,4 @@ pipeline:
         - push
       branch:
         - master
-        - prometheus
         - refs/tags/*
