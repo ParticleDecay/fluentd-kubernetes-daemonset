@@ -27,12 +27,8 @@ RUN set -ex \
         git \
 <% end %>
 <% else %>
-<<<<<<< HEAD
-RUN buildDeps="sudo make gcc g++ libc-dev ruby-dev libffi-dev<% case target when "graylog" %> git build-essential patch zlib1g-dev liblzma-dev<% end %>" \
-=======
 RUN buildDeps="sudo make gcc g++ libc-dev ruby-dev libffi-dev \
      <% case target when "graylog" %> git build-essential patch zlib1g-dev liblzma-dev<% end %>" \
->>>>>>> afbe3e8773af4e6f9c7413db705877cacb8629d4
      && apt-get update \
      && apt-get upgrade -y \
      && apt-get install \
