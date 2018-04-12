@@ -30,7 +30,6 @@ COPY ./conf/kubernetes.conf /fluentd/etc/
 
 # Copy plugins
 COPY plugins /fluentd/plugins/
-COPY entrypoint.sh /fluentd/entrypoint.sh
 
 # Environment variables
 ENV FLUENTD_OPT=""
@@ -42,4 +41,4 @@ ENV FLUENTD_CONF="fluent.conf"
 #ENV LD_PRELOAD="/usr/lib/libjemalloc.so.2"
 
 # Run Fluentd
-CMD ["/fluentd/entrypoint.sh"]
+CMD exec fluentd -c /fluentd/etc/${FLUENTD_CONF} -p /fluentd/plugins ${FLUENTD_OPT}
